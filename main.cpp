@@ -51,7 +51,7 @@ public:
 
 class MineCell : public Cell {
 private:
-    bool isMine;
+    bool isMine = true;
 public:
      bool getMine() {
          return this->isMine;
@@ -190,7 +190,7 @@ public:
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
                 //std::cout<<"2. loop";
-                if (cells[row][col]->isCellMine()) {
+                if (cells[row][col]->isCellMine()) { //ten warunek nie działa
                     std::cout<<"1. warunek";
                     int count = 0;
                     for (int i = -1; i <= 1; i++) {
