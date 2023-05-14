@@ -11,126 +11,141 @@
 #include <chrono>
 #include <thread>
 #include <windows.h>
+#include <vector>
 
 class Cell {
 protected:
-    bool isRevealed;
-    bool isMine;
-    bool isNumber;
+    bool isRevealed=0;
+    bool isMine=0;
+    bool isNumber=0;
+    bool isFlag=0;
 public:
-    Cell() : isRevealed(false) {}
+    Cell() : isRevealed(false), isMine(false), isNumber(false), isFlag(false) {}
+    bool makeFlagged() {return !isFlag;}
     virtual char getSymbol() const = 0;
+    bool isCellFlagged() const {return isFlag;}
     bool reveal() { return isRevealed = true; }
     bool isCellRevealed() const { return isRevealed; }
-    bool isCellMine() {return isMine; }
-    bool isCellNumber() {return isNumber;}
-};
-
-class EmptyCell : public Cell {
-public:
-    //EmptyCell() {}
-    char getSymbol() const override {
-        if (isCellRevealed())
-            return ' ';
-        else
-            return '-';
-    }
+    virtual bool isCellMine() {return isMine; }
+    virtual bool isCellNumber() {return isNumber;}
 };
 
 class NumberCell : public Cell {
     int number;
 public:
-    NumberCell(int num) : number(num) {}
+    NumberCell() : number() {}
+    void setAdjacentMines(int mines) { number = mines; }
+    bool isCellNumber() {return true;}
     char getSymbol() const override {
+        if (isCellFlagged())
+            return 'F';
         if (isCellRevealed())
-            return '0' + number;
+            if(number == 0)
+                return ' ';
+            else
+                return '0' + number;
         else
             return '-';
     }
 };
 
 class MineCell : public Cell {
-private:
-    bool isMine = true;
 public:
-     bool getMine() {
-         return this->isMine;
-     }
+    bool isCellMine() {
+        return true;
+    }
     char getSymbol() const override {
+        if (isCellFlagged())
+            return 'F';
         if (isCellRevealed())
             return 'X';
         else
-            return '-';
+            return 'W';
     }
 };
 
-class Board  {
-    Cell* cells[10][10];
-    /*
-    void losuj_pozycje (int niex, int niey)
-    {
-        time_t t;
-        int poz_x, poz_y;
-        int ilosc = 10;
+class Board {
 
-        srand((unsigned)time(&t));
-
-        while (ilosc>0)
-        {
-            poz_x = rand()%10;
-            poz_y = rand()%10;
-
-            if ((dynamic_cast<MineCell *>(cells(poz_x, poz_y)) != nullptr) && poz_x!=niex && poz_y!=niey)
-            {
-                cells[poz_x][poz_y] = new MineCell();
-                ilosc--;
-            }
-        }
-    }*/
+private:
+    std::vector<std::vector<Cell *>> cells;
+    int revealed_cells = 0;
+    int height = 10;
+    int width = 10;
+    int number_of_moves = 0;
+    int GameState=0;
+    int numofMines=0;
 
 public:
-    Cell* getCell(int x, int y) {
+    Cell *getCell(int x, int y) {
         return cells[x][y];
     }
-
-    const Cell* getCellsPointer() const { //to chyba niepotrzebne
-        return reinterpret_cast<const Cell *>(&cells);
-    }
-    Board()
+    int getGameState()
     {
-        for (int i = 0; i < 10; ++i) {
-            for (int j = 0; j < 10; ++j) {
-                if (rand() % 10 == 0)
-                    cells[i][j] = new MineCell();
-                else
-                    cells[i][j] = new EmptyCell();//NumberCell(0);//cells[i][j] = new EmptyCell();//new NumberCell(number)//(rand() % 9 + 1);
-                //calculateMines(i,j);
+        return GameState;
+    }
+    int loseGameState()
+    {
+        GameState = 1;
+    }
 
+    bool inBoard(int x, int y) const {
+        if (x < 0) {
+            return false;
+        }
+        if (x >= height) {
+            return false;
+        }
+        if (y < 0) {
+            return false;
+        }
+        if (y >= width) {
+            return false;
+        }
+        return true;
+    }
+
+    Board() {
+        cells.resize(10, std::vector<Cell *>(10));
+        initializeBoard();
+    }
+
+    void initializeBoard() {
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                cells[i][j] = new NumberCell();
+            }
+        }
+        int minesToPlace = 10;
+        while (minesToPlace > 0) {
+            int row = rand() % 10;
+            int col = rand() % 10;
+            if (!cells[row][col]->isCellMine()) {//(dynamic_cast<MineCell*>(cells[row][col]) == nullptr) {
+                delete cells[row][col];
+                cells[row][col] = new MineCell();
+                minesToPlace--;
+            }
+        }
+        updateAdjacentMines();
+    }
+
+    void updateAdjacentMines() {
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                if (dynamic_cast<MineCell *>(cells[i][j]) == nullptr) {
+                    int count = 0;
+                    for (int row = -1; row <= 1; row++) {
+                        for (int col = -1; col <= 1; col++) {
+                            if (i + row >= 0 && i + row < 10 && j + col >= 0 && j + col < 10) {
+                                if (dynamic_cast<MineCell *>(cells[i + row][j + col]) != nullptr)
+                                    count++;
+                            }
+                        }
+                    }
+                    dynamic_cast<NumberCell *>(cells[i][j])->setAdjacentMines(count);
+                }
             }
         }
     }
-    /*
-    Board(int numRows, int numCols, int numMines) {
-        //cells.resize(numRows, std::vector<Cell*>(numCols, new NumberCell)); !!!!!!!!!
-        //setMines();
-        //calculateAdjacentMines(int x,int y);
-    }
-    */
-
-    void SetMines(int number){
-        for (int i = 0; i < 10; ++i) {
-            for (int j = 0; j < 10; ++j) {
-                if (rand() % 10 == 0)
-                    cells[i][j] = new MineCell();
-                else
-                    cells[i][j] = new EmptyCell();//NumberCell(0);//cells[i][j] = new EmptyCell();//new NumberCell(number)//(rand() % 9 + 1);
-                //calculateMines(i,j);
-
-            }
-        }
-    }
-
-/*
     ~Board() {
         for (int i = 0; i < 10; ++i) {
             for (int j = 0; j < 10; ++j) {
@@ -138,73 +153,143 @@ public:
             }
         }
     }
-*/
-    void revealCell(int x, int y) {
-        if (x<0 || x>9) return; // poza tablicą wyjście
-        if (y<0 || y>9) return; // poza tablicą wyjście
-        if (x < 0 || x >= 10 || y < 0 || y >= 10) {
-            std::cout << "Invalid cell coordinates!" << std::endl;
+
+    void reveal_empty_fields_around(int row, int col) {
+        for (int help_row = (row - 1); help_row <= (row + 1); help_row++) {
+            for (int help_col = (col - 1); help_col <= (col + 1); help_col++) {
+                if (inBoard(help_row, help_col)) {//(row<10&&row>=0&&col>=0&&col<10)//(in_board(help_row, help_col)) {
+                    if (!cells[help_row][help_col]->isCellRevealed()) {//(help_row, help_col)) {
+                        /*if(hasFlag(help_row,help_col)){
+                            cells[help_row][help_col].hasFlag = false;
+                            flags -=1;
+                        }*/
+                        if (!cells[help_row][help_col]->isCellMine())
+                            cells[help_row][help_col]->reveal();
+                        //revealed_fields += 1;
+                        // if (cells[help_row][help_col]->isCellNumber())
+                        //  return;
+                        if (countMines(help_row, help_col) == 0) {
+                            reveal_empty_fields_around(help_row, help_col);
+
+                        }
+                    }
+
+                }
+
+            }
+        }
+
+    }
+    int getMinesOnField() {
+        int allMines = 0;
+        for (int i = 0; i < 10; ++i) {
+            for (int j = 0; j < 10; ++j) {
+                if (cells[i][j]->isCellMine())
+                    allMines += 1;
+            }
+            return allMines;
+        }
+    }
+    int countMines(int row, int col) const {
+        if (!inBoard(row, col)) {
+            return -1;
+        }
+        if (!cells[row][col]->isCellRevealed()) {
+            return -1;
+        }
+
+        int mines_around = 0;
+        for (int help_row = row - 1; help_row <= (row + 1); help_row++) {
+            for (int help_col = (col - 1); help_col <= (col + 1); help_col++) {
+                if (inBoard(help_row, help_col)) {
+                    if (cells[help_row][help_col]->isCellMine()) {
+                        mines_around += 1;
+                        std::cout << mines_around;
+                    }
+                }
+            }
+        }
+        //odejmujemy jesli zadane pole ma bombe
+        if (cells[row][col]->isCellMine()) {
+            mines_around -= 1;
+        }
+        //std::cout<<mines_around;
+        return mines_around;
+    }
+    void toggleFlag(int x,int y){
+        std::cout<<"HAGBAGA!!!! ";
+        if (!inBoard(x,y)) {
             return;
         }
 
-        if (cells[x][y]->isCellRevealed()) {
-            std::cout << "Cell already revealed!" << std::endl;
+        if (!cells[x][y]->isCellRevealed()) {
+            std::cout<<"niburhigur!!!! ";
+            if (!cells[x][y]->isCellFlagged()) {
+                /*if (flags==mines){
+                    return;
+                }*/
+                std::cout<<"ulumbulum!!!! ";
+                cells[x][y]->makeFlagged();
+                //flags += 1;
+            }
+            else{
+                std::cout<<"maronfaron!!!! ";
+                cells[x][y]->makeFlagged();
+                // flags -=1;
+            }
+            number_of_moves += 1;
+        }
+    }
+
+    void revealCell(int row, int col) {
+        if (!inBoard(row, col)) {
             return;
         }
-
-        if (cells[x][y]->isCellMine()) {
+        if (cells[row][col]->isCellFlagged()) {
             return;
         }
-
-
-        cells[x][y]->reveal();// Nie może być revealCell(); ??? chciałbym tu mieć rekurencję
-        /*
-            if (cells[x][y]->isCellRevealed()) {
-                 std::cout << "Cell already revealed!" << std::endl;
-                 return;
-        }*/
-        cells[x-1][y-1]->reveal();
-        cells[x-1][y]->reveal();
-        cells[x-1][y+1]->reveal();
-        cells[x+1][y-1]->reveal();
-        cells[x+1][y]->reveal();
-        cells[x][y-1]->reveal();
-        cells[x][y+1]->reveal();
-        cells[x+1][y+1]->reveal();
+        if (cells[row][col]->isCellRevealed()) {
+            return;
+        }
+        if (!cells[row][col]->isCellMine()) {
+            cells[row][col]->reveal();
+            //revealed_fields += 1;
+            number_of_moves += 1;
+            if (countMines(row, col) == 0) {
+                reveal_empty_fields_around(row, col);
+            }
+        } else {
+            if (number_of_moves == 0) {
+                delete cells[row][col];
+                cells[row][col] = new NumberCell;
+                updateAdjacentMines();
+                cells[row][col]->reveal();
+                //revealed_fields += 1;
+                number_of_moves += 1;
+                if (countMines(row, col) == 0) {
+                    reveal_empty_fields_around(row, col);
+                }
+                return;
+            }
+            if (number_of_moves != 0) {
+                loseGameState();
+                std::cout << "LOSSS!" << std::endl;
+                return;
+            }
+        }
 
     }
 
     void revealAll()
     {
-        for (int i=0;i<10;i++)
+        for(int row=0; row<height; row++)
         {
-            for (int j=0;i<10;i++)
+            for(int col=0; col<width; col++)
             {
-                cells[i][j]->reveal();
-            }
-        }
-    }
-
-    void calculateMines(int x, int y)
-    {
-        for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 10; col++) {
-                //std::cout<<"2. loop";
-                if (cells[row][col]->isCellMine()) { //ten warunek nie działa
-                    std::cout<<"1. warunek";
-                    int count = 0;
-                    for (int i = -1; i <= 1; i++) {
-                        for (int j = -1; j <= 1; j++) {
-                            int r = row + i;
-                            int c = col + j;
-                            if (cells[r][c]->isCellMine()) {
-                                count++;
-                                std::cout<<"COUNT W LOOP: "<<count;
-                            }
-                        }
-                    }
-                    std::cout<<"Count poza:" <<count;
-                    cells[row][col] = new NumberCell(8);//NumberCell::getSymbol(count);// = count;//static_cast<NumberCell*>(cells[row][col])->setAdjacentMines(count);
+                cells[row][col]->reveal();
+                if(cells[row][col]->isCellMine())
+                {
+                    cells[row][col]->reveal();
                 }
             }
         }
@@ -220,33 +305,33 @@ public:
         }
     }
 
-        bool AreThereMines() //making sure the 1st field is not a mine, will work on this later
-        {
-            for (int i = 0; i<10; i++) {
-                for (int j = 0; j < 10; j++) {
-                    if (getCell(i, j)->isCellMine())//(dynamic_cast<MineCell *>(board.getCell(i, j)) != nullptr)
-                        return true;
-                }
+    bool AreThereMines() //making sure the 1st field is not a mine, will work on this later
+    {
+        for (int i = 0; i<10; i++) {
+            std::cout<<"MINA";
+            for (int j = 0; j < 10; j++)
+            {
+                std::cout<<"MINA2";
+                if (getCell(i, j)->isCellMine())//(dynamic_cast<MineCell *>(board.getCell(i, j)) != nullptr)
+                    return true;
             }
-            return false;
         }
-    bool calculateAdjacentMines(int x,int y) {
-        int numRows = 10;//cells.size();
-        int numCols = 10;// cells[0].size();
-        //for (int row = 0)
-
-
-
-
-
-
-
+        return false;
     }
+
+    void CheckWin()
+    {
+        if(revealed_cells == (height*width)-getMinesOnField()){
+            GameState = 2;
+            std::cout<<"WIN";
+        }
+    }
+
 };
 
-class Game : public Board {
+class Game {
     Board board;
-    int koniec=0;
+    char letter;
 public:
     void sterowanie() {
         //int poz_x,poz_y;
@@ -254,8 +339,8 @@ public:
         while (true) {
             if ((GetKeyState(enter) & 0x8000)) {
 
-                if (AreThereMines()) {
-                    revealAll();
+                if (board.AreThereMines()) {
+                    board.revealAll();
                     std::cout << "You hit a mine! Too bad, you lost!" << std::endl;
                     getch();
                     return;
@@ -265,11 +350,11 @@ public:
                 revealCell(poz_x, poz_y); //odkrywanie pól
                 board.printBoard();
                 return;}*/
-
+                board.countMines(poz_x,poz_y);
                 if (dynamic_cast<MineCell *>(board.getCell(poz_x, poz_y)) != nullptr)//(cells[poz_x][poz_y]->isCellMine()) //trafiles na mine
-                    koniec = 2;
-
-                revealCell(poz_x, poz_y); //odkrywanie pól
+                    //koniec = 2;
+                    board.reveal_empty_fields_around(poz_x,poz_y);
+                //board.revealCell(poz_x, poz_y); //odkrywanie pól
                 board.printBoard(); // wyswietl plansze
 
                 /*
@@ -303,39 +388,63 @@ public:
             }
         }
     }
+    void checkGameState()
+    {
+        board.CheckWin();
+        if(board.getGameState() == 1)
+        {
+            board.revealAll();
+            std::cout<<"You hit a mine! Too bad, you lost!"<<std::endl;
+            getch();
+            return;
+        }
+        else if(board.getGameState() == 2)
+        {
+            std::cout<<"Wahoo! You won! CONGRATZ!"<<std::endl;
+            getch();
+            return;
+        }
+    }
     void play() {
         int x, y;
-        while (true) {
-            std::cout<< AreThereMines();
+        while (board.getGameState() == 0) {
+            if (!board.AreThereMines())
+            {
+                std::cout << "Enter the coordinates (x, y) of the cell to reveal: ";
+                std::cin >> x >> y;
+                board.initializeBoard();
+            }
+            std::cout<< board.AreThereMines()<<std::endl;
             board.printBoard();
-            std::cout << "Enter the coordinates (x, y) of the cell to reveal: ";
-            std::cin >> x >> y;
+            std::cout << "Enter the coordinates (x, y) of the cell to reveal and then either F or R to command: ";
+            std::cin >> x >> y >> letter;
+            switch (letter) {
+                case 'f' :
+                    board.toggleFlag(x,y);
+                    break;
+                case 'r' :
+                    board.revealCell(x, y);
+                    break;
+                default:
+                    std::cout << "Unknown command." << std::endl;
+            }
+            checkGameState();
+            //board.reveal_empty_fields_around(x,y);
+            //board.revealCell(x, y);
+            //board.countMines(x,y);
+            //Cell* cell = board.getCell(x, y);
 
-
-            board.revealCell(x, y);
-            calculateMines(x,y);
-            Cell* cell = board.getCell(x, y);
-            if (!(dynamic_cast<MineCell*>(board.getCell(x,y)) == nullptr))
-                {
-                    revealAll();
-                std::cout<<"You hit a mine! Too bad, you lost!"<<std::endl;
-                    getch();
-                    return;
-                }
-            system("cls");//(cell->MineCell()) {
-            }//if (board.getCellsPointer[x][y]->MineCell()) //dynamic_cast<MineCell *>(board.getCells()[x][y]) == nullptr)//
+            system("cls");
         }
-    };
-//};
+    }
+};
 
 int main() {
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
+    std::cout <<"\n" << std::endl;
     Game game;
-
-        //Sleep(60);
-        game.play();
-        //if (sprawdz_czy_wygrana()==true) koniec=1;
+    game.play();
 
 
     return 0;
