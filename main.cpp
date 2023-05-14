@@ -21,7 +21,8 @@ protected:
     bool isFlag=0;
 public:
     Cell() : isRevealed(false), isMine(false), isNumber(false), isFlag(false) {}
-    bool makeFlagged() {return !isFlag;}
+    bool makeFlagged() {return isFlag =true;}
+    bool makeDeFlagged() {return isFlag =false;}
     virtual char getSymbol() const = 0;
     bool isCellFlagged() const {return isFlag;}
     bool reveal() { return isRevealed = true; }
@@ -74,6 +75,7 @@ private:
     int number_of_moves = 0;
     int GameState=0;
     int numofMines=0;
+    int flags = 0;
 
 public:
     Cell *getCell(int x, int y) {
@@ -119,7 +121,7 @@ public:
         while (minesToPlace > 0) {
             int row = rand() % 10;
             int col = rand() % 10;
-            if (!cells[row][col]->isCellMine()) {//(dynamic_cast<MineCell*>(cells[row][col]) == nullptr) {
+            if (!cells[row][col]->isCellMine()) {
                 delete cells[row][col];
                 cells[row][col] = new MineCell();
                 minesToPlace--;
@@ -157,12 +159,12 @@ public:
     void reveal_empty_fields_around(int row, int col) {
         for (int help_row = (row - 1); help_row <= (row + 1); help_row++) {
             for (int help_col = (col - 1); help_col <= (col + 1); help_col++) {
-                if (inBoard(help_row, help_col)) {//(row<10&&row>=0&&col>=0&&col<10)//(in_board(help_row, help_col)) {
+                if (inBoard(help_row, help_col)) {
                     if (!cells[help_row][help_col]->isCellRevealed()) {//(help_row, help_col)) {
-                        /*if(hasFlag(help_row,help_col)){
-                            cells[help_row][help_col].hasFlag = false;
-                            flags -=1;
-                        }*/
+                        if(cells[help_row][help_col]->isCellFlagged()) {
+                            cells[help_row][help_col]->makeDeFlagged();
+                            flags -= 1;
+                        }
                         if (!cells[help_row][help_col]->isCellMine())
                             cells[help_row][help_col]->reveal();
                         //revealed_fields += 1;
@@ -230,12 +232,12 @@ public:
                 }*/
                 std::cout<<"ulumbulum!!!! ";
                 cells[x][y]->makeFlagged();
-                //flags += 1;
+                flags += 1;
             }
             else{
                 std::cout<<"maronfaron!!!! ";
-                cells[x][y]->makeFlagged();
-                // flags -=1;
+                cells[x][y]->makeDeFlagged();
+                flags -=1;
             }
             number_of_moves += 1;
         }
@@ -305,20 +307,6 @@ public:
         }
     }
 
-    bool AreThereMines() //making sure the 1st field is not a mine, will work on this later
-    {
-        for (int i = 0; i<10; i++) {
-            std::cout<<"MINA";
-            for (int j = 0; j < 10; j++)
-            {
-                std::cout<<"MINA2";
-                if (getCell(i, j)->isCellMine())//(dynamic_cast<MineCell *>(board.getCell(i, j)) != nullptr)
-                    return true;
-            }
-        }
-        return false;
-    }
-
     void CheckWin()
     {
         if(revealed_cells == (height*width)-getMinesOnField()){
@@ -339,7 +327,7 @@ public:
         while (true) {
             if ((GetKeyState(enter) & 0x8000)) {
 
-                if (board.AreThereMines()) {
+                if (1) {
                     board.revealAll();
                     std::cout << "You hit a mine! Too bad, you lost!" << std::endl;
                     getch();
@@ -394,13 +382,13 @@ public:
         if(board.getGameState() == 1)
         {
             board.revealAll();
-            std::cout<<"You hit a mine! Too bad, you lost!"<<std::endl;
+            std::cout<<"You hit a mine! Too bad, you lost!"<<std::endl<<"Press any key to exit";
             getch();
             return;
         }
         else if(board.getGameState() == 2)
         {
-            std::cout<<"Wahoo! You won! CONGRATZ!"<<std::endl;
+            std::cout<<"Wahoo! You won! CONGRATZ!"<<std::endl<<"Press any key to exit";
             getch();
             return;
         }
@@ -408,13 +396,6 @@ public:
     void play() {
         int x, y;
         while (board.getGameState() == 0) {
-            if (!board.AreThereMines())
-            {
-                std::cout << "Enter the coordinates (x, y) of the cell to reveal: ";
-                std::cin >> x >> y;
-                board.initializeBoard();
-            }
-            std::cout<< board.AreThereMines()<<std::endl;
             board.printBoard();
             std::cout << "Enter the coordinates (x, y) of the cell to reveal and then either F or R to command: ";
             std::cin >> x >> y >> letter;
@@ -429,10 +410,6 @@ public:
                     std::cout << "Unknown command." << std::endl;
             }
             checkGameState();
-            //board.reveal_empty_fields_around(x,y);
-            //board.revealCell(x, y);
-            //board.countMines(x,y);
-            //Cell* cell = board.getCell(x, y);
 
             system("cls");
         }
@@ -442,10 +419,8 @@ public:
 int main() {
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
-    std::cout <<"\n" << std::endl;
     Game game;
     game.play();
-
 
     return 0;
 }
