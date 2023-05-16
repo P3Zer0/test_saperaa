@@ -184,15 +184,15 @@ public:
         }
 
     }
-    int getMinesOnField() {
+    int getMinesOnField() const {
         int allMines = 0;
         for (int i = 0; i < 10; ++i) {
             for (int j = 0; j < 10; ++j) {
                 if (cells[i][j]->isCellMine())
                     allMines += 1;
             }
-            return allMines;
         }
+        return allMines;
     }
     int countMines(int row, int col) const {
         if (!inBoard(row, col)) {
@@ -229,9 +229,9 @@ public:
         if (!cells[x][y]->isCellRevealed()) {
             std::cout<<"niburhigur!!!! ";
             if (!cells[x][y]->isCellFlagged()) {
-                /*if (flags==mines){
-                    return;
-                }*/
+                if (flags==getMinesOnField()){
+                    return;}
+
                 std::cout<<"ulumbulum!!!! ";
                 cells[x][y]->makeFlagged();
                 flags += 1;
@@ -249,7 +249,7 @@ public:
         if (!inBoard(row, col)) {
             return;
         }
-        if (cells[row][col]->isCellFlagged()) {
+        if ((cells[row][col]->isCellFlagged())&&(cells[row][col]->isCellMine())) {
             return;
         }
         if (cells[row][col]->isCellRevealed()) {
@@ -307,11 +307,13 @@ public:
             }
             std::cout << std::endl;
         }
+        std::cout<<revealed_cells<<std::endl;
+        std::cout<< getMinesOnField();
     }
 
     void CheckWin()
     {
-        if(revealed_cells == (height*width)-getMinesOnField()){
+        if (revealed_cells == ((height*width)-getMinesOnField())){
             GameState = 2;
             std::cout<<"WIN";
         }
