@@ -166,8 +166,10 @@ public:
                             flags -= 1;
                         }
                         if (!cells[help_row][help_col]->isCellMine())
+                        {
                             cells[help_row][help_col]->reveal();
-                        //revealed_fields += 1;
+                            revealed_cells += 1;
+                        }
                         // if (cells[help_row][help_col]->isCellNumber())
                         //  return;
                         if (countMines(help_row, help_col) == 0) {
@@ -239,7 +241,7 @@ public:
                 cells[x][y]->makeDeFlagged();
                 flags -=1;
             }
-            number_of_moves += 1;
+            //number_of_moves += 1; //ZOBACZYMY CZY WYRZUCIC CZY NIE
         }
     }
 
@@ -255,7 +257,7 @@ public:
         }
         if (!cells[row][col]->isCellMine()) {
             cells[row][col]->reveal();
-            //revealed_fields += 1;
+            revealed_cells += 1;
             number_of_moves += 1;
             if (countMines(row, col) == 0) {
                 reveal_empty_fields_around(row, col);
@@ -266,7 +268,7 @@ public:
                 cells[row][col] = new NumberCell;
                 updateAdjacentMines();
                 cells[row][col]->reveal();
-                //revealed_fields += 1;
+                revealed_cells += 1;
                 number_of_moves += 1;
                 if (countMines(row, col) == 0) {
                     reveal_empty_fields_around(row, col);
@@ -321,61 +323,6 @@ class Game {
     Board board;
     char letter;
 public:
-    void sterowanie() {
-        //int poz_x,poz_y;
-        int poz_x = 0, poz_y = 0, o_poz_x = 1, o_poz_y = 1;
-        while (true) {
-            if ((GetKeyState(enter) & 0x8000)) {
-
-                if (1) {
-                    board.revealAll();
-                    std::cout << "You hit a mine! Too bad, you lost!" << std::endl;
-                    getch();
-                    return;
-                }
-
-                /*
-                revealCell(poz_x, poz_y); //odkrywanie pól
-                board.printBoard();
-                return;}*/
-                board.countMines(poz_x,poz_y);
-                if (dynamic_cast<MineCell *>(board.getCell(poz_x, poz_y)) != nullptr)//(cells[poz_x][poz_y]->isCellMine()) //trafiles na mine
-                    //koniec = 2;
-                    board.reveal_empty_fields_around(poz_x,poz_y);
-                //board.revealCell(poz_x, poz_y); //odkrywanie pól
-                board.printBoard(); // wyswietl plansze
-
-                /*
-            if ((GetKeyState(flaga) & 0x8000))
-            {
-                if (board.getCell(poz_x,poz_y)){}//(plansza[poz_x][poz_y].odkryte==true) {} //odkryte, nic sie nie dzieje
-
-                else if (plansza[poz_x][poz_y].czyFlaga==false && plansza[poz_x][poz_y].odkryte==false)
-                {
-                    plansza[poz_x][poz_y].czyFlaga=true;
-                }
-                else if (plansza[poz_x][poz_y].czyFlaga==true && plansza[poz_x][poz_y].odkryte==false)
-                {
-                    plansza[poz_x][poz_y].czyFlaga=false;
-                }
-            }
-                 */
-
-                if ((GetKeyState(strzalka_prawo) & 0x8000) && poz_x < 9) poz_x++;
-                if ((GetKeyState(strzalka_lewo) & 0x8000) && poz_x > 0) poz_x--;
-                if ((GetKeyState(strzalka_dol) & 0x8000) && poz_y < 9) poz_y++;
-                if ((GetKeyState(strzalka_gora) & 0x8000) && poz_y > 0) poz_y--;
-
-                //if (o_poz_y == poz_y && o_poz_x == poz_x) return; //jeżeli nie ma ruchu wyjdz
-
-                o_poz_y = poz_y; //zmienne pomocnicza do warunku wyżej
-                o_poz_x = poz_x;
-
-                board.printBoard();// wyswietl plansze
-                system("cls");
-            }
-        }
-    }
     void checkGameState()
     {
         board.CheckWin();
