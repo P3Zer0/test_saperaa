@@ -347,7 +347,7 @@ public:
         while (board.getGameState() == 0) {
             board.printBoard();
             std::cout << "Enter the coordinates (x, y) of the cell to reveal and then either F or R to command: ";
-            std::cin >> x >> y >> letter;
+            std::cin >> y >> x >> letter;
             switch (letter) {
                 case 'f' :
                     board.toggleFlag(x,y);
