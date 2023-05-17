@@ -6,7 +6,7 @@
 #include <cstdlib>
 
 
-std::vector<std::vector<Cell *>> cells;
+//std::vector<std::vector<Cell *>> cells;
 
 /*
     Cell Board::*getCell(int x, int y) {
@@ -101,8 +101,6 @@ void Board::reveal_empty_fields_around(int row, int col) {
                         cells[help_row][help_col]->reveal();
                         revealed_cells += 1;
                     }
-                    // if (cells[help_row][help_col]->isCellNumber())
-                    //  return;
                     if (countMines(help_row, help_col) == 0) {
                         reveal_empty_fields_around(help_row, help_col);
 
@@ -152,23 +150,19 @@ int Board::countMines(int row, int col) const {
     return mines_around;
 }
 void Board::toggleFlag(int x,int y){
-    std::cout<<"HAGBAGA!!!! ";
     if (!inBoard(x,y)) {
         return;
     }
 
     if (!cells[x][y]->isCellRevealed()) {
-        std::cout<<"niburhigur!!!! ";
         if (!cells[x][y]->isCellFlagged()) {
             /*if (flags==mines){
                 return;
             }*/
-            std::cout<<"ulumbulum!!!! ";
             cells[x][y]->makeFlagged();
             flags += 1;
         }
         else{
-            std::cout<<"maronfaron!!!! ";
             cells[x][y]->makeDeFlagged();
             flags -=1;
         }

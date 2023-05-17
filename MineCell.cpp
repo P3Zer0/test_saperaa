@@ -13,5 +13,5 @@ char MineCell::getSymbol() const {
     if (isCellRevealed())
         return 'X';
     else
-        return 'W';
+        return '-';
 }
