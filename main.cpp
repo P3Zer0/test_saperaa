@@ -12,7 +12,9 @@
 #include <thread>
 #include <windows.h>
 #include <vector>
+#include "Game.h"
 
+/*
 class Cell {
 protected:
     bool isRevealed=0;
@@ -307,8 +309,9 @@ public:
             }
             std::cout << std::endl;
         }
+        std::cout<<"Debug stuff (revealed cells, mines on field): \n";
         std::cout<<revealed_cells<<std::endl;
-        std::cout<< getMinesOnField();
+        std::cout<< getMinesOnField()<<std::endl;
     }
 
     void CheckWin()
@@ -364,6 +367,7 @@ public:
         }
     }
 };
+*/
 
 int main() {
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
