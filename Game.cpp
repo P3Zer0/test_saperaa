@@ -5,8 +5,6 @@
 #include "Game.h"
 #include <conio.h>
 
-Board board;
-char letter;
 
 void Game::checkGameState()
 {

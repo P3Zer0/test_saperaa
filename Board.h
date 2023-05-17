@@ -19,18 +19,18 @@ private:
     int width = 10;
     int number_of_moves = 0;
     int GameState=0;
-    int numofMines=0;
+    //int numofMines=0;
     int flags = 0;
 
 public:
-    Cell *getCell(int x, int y);
+    //Cell *getCell(int x, int y);
 
     bool inBoard(int x, int y) const;
     Board() {
         cells.resize(10, std::vector<Cell *>(10));
         initializeBoard();
     }
-    int getGameState();
+    int getGameState() const;
 
     int loseGameState();
 

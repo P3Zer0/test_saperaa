@@ -13,7 +13,7 @@
         return cells[x][y];
     }
     */
-int Board::getGameState()
+int Board::getGameState() const
 {
     return GameState;
 }

@@ -1,17 +1,5 @@
-#include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <conio.h>
-#define strzalka_lewo 0x25
-#define strzalka_prawo 0x27
-#define strzalka_dol 0x28
-#define strzalka_gora 0x26
-#define enter 0x0D
-#define flaga 0x46
-#include <chrono>
-#include <thread>
-#include <windows.h>
-#include <vector>
 #include "Game.h"
 
 /*
