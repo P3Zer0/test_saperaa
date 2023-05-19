@@ -8,8 +8,8 @@
 
 class MineCell : public Cell {
 public:
-    bool isCellMine();
-    char getSymbol() const;
+    bool isCellMine() override;
+    char getSymbol() const override;
 };
 
 

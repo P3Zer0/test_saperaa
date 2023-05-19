@@ -11,7 +11,7 @@ class NumberCell : public Cell {
 public:
     NumberCell() : number() {}
     void setAdjacentMines(int mines);
-    bool isCellNumber();
+    bool isCellNumber() override;
     char getSymbol() const override;
 };
 
