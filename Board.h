@@ -52,7 +52,7 @@ public:
 
     void revealAll();
 
-    void printBoard() const;
+    void printBoard(int x, int y) const;
 
     void CheckWin();
 

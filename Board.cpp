@@ -153,12 +153,8 @@ void Board::toggleFlag(int x,int y){
     if (!inBoard(x,y)) {
         return;
     }
-
     if (!cells[x][y]->isCellRevealed()) {
         if (!cells[x][y]->isCellFlagged()) {
-            /*if (flags==mines){
-                return;
-            }*/
             cells[x][y]->makeFlagged();
             flags += 1;
         }
@@ -166,7 +162,6 @@ void Board::toggleFlag(int x,int y){
             cells[x][y]->makeDeFlagged();
             flags -=1;
         }
-        //number_of_moves += 1; //ZOBACZYMY CZY WYRZUCIC CZY NIE
     }
 }
 
@@ -202,7 +197,6 @@ void Board::revealCell(int row, int col) {
         }
         if (number_of_moves != 0) {
             loseGameState();
-            std::cout << "LOSSS!" << std::endl;
             return;
         }
     }
@@ -224,15 +218,21 @@ void Board::revealAll()
     }
 }
 
-void Board::printBoard() const {
+void Board::printBoard(int x, int y) const {
     for (int i = 0; i < 10; ++i) {
         for (int j = 0; j < 10; ++j) {
-
+            if (i==x&&j==y)
+            {
+                std::cout << "# ";
+                std::cout << cells[i][j]->getSymbol() << '\b';
+            }
+            else
             std::cout << cells[i][j]->getSymbol() << ' ';
         }
         std::cout << std::endl;
     }
-    std::cout<<"Debug stuff (revealed cells, mines on field): \n";
+
+    std::cout<<"To move around the board, use arrow keys.\nTo reveal a cell, press ENTER.\nTo place a flag, press F.";
     std::cout<<revealed_cells<<std::endl;
     std::cout<< getMinesOnField()<<std::endl;
 }
@@ -241,6 +241,5 @@ void Board::CheckWin()
 {
     if(revealed_cells == (height*width)-getMinesOnField()){
         GameState = 2;
-        std::cout<<"WIN";
     }
 }
