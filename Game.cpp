@@ -30,29 +30,8 @@ void Game::checkGameState()
         return;
     }
 }
-void Game::play() {
-    int x, y;
-    while (board.getGameState() == 0) {
-        board.printBoard(x,y);
-        std::cout << "Enter the coordinates (x, y) of the cell to reveal and then either F or R to command: ";
-        std::cin >> y >> x >> letter;
-        switch (letter) {
-            case 'f' :
-                board.toggleFlag(x,y);
-                break;
-            case 'r' :
-                board.revealCell(x, y);
-                break;
-            default:
-                std::cout << "Unknown command." << std::endl;
-        }
-        checkGameState();
 
-        system("cls");
-    }
-}
-
-void Game::sterowanie()
+void Game::play()
 {
     int x=0, y=0;
 

@@ -13,7 +13,6 @@ class Game {
 public:
     void checkGameState();
     void play();
-    void sterowanie();
 };
 
 
