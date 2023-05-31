@@ -4,6 +4,9 @@
  * @file Game.cpp
  *
  * Implementation of methods declared in "Game.h".
+ * it includes conio.h and defines arrow keys, the flag
+ * and the reveal button. assigning them to their
+ * corresponding keys on the keyboard.
  */
 
 
