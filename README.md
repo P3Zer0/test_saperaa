@@ -40,3 +40,8 @@ A screenshot of the game being played.
 
 [GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/)
 
+
+## Authors
+
+- [@Pe_Zero](https://github.com/P3Zer0)
+
