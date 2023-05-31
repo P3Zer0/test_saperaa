@@ -1,6 +1,11 @@
-//
-// Created by tomex on 17.05.2023.
-//
+/**
+ *  Created by Tomasz Jarząbek on 17.05.2023.
+ *
+ * @file Game.cpp
+ *
+ * Implementation of methods declared in "Game.h".
+ */
+
 
 #include "Game.h"
 #include <conio.h>

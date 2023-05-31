@@ -77,16 +77,6 @@ void Board::updateAdjacentMines() {
     }
 }
 
-/*
-~Board() {
-    for (int i = 0; i < 10; ++i) {
-        for (int j = 0; j < 10; ++j) {
-            delete cells[i][j];
-        }
-    }
-}
- */
-
 void Board::reveal_empty_fields_around(int row, int col) {
     for (int help_row = (row - 1); help_row <= (row + 1); help_row++) {
         for (int help_col = (col - 1); help_col <= (col + 1); help_col++) {
@@ -137,7 +127,6 @@ int Board::countMines(int row, int col) const {
             if (inBoard(help_row, help_col)) {
                 if (cells[help_row][help_col]->isCellMine()) {
                     mines_around += 1;
-                    std::cout << mines_around;
                 }
             }
         }
@@ -146,7 +135,6 @@ int Board::countMines(int row, int col) const {
     if (cells[row][col]->isCellMine()) {
         mines_around -= 1;
     }
-    //std::cout<<mines_around;
     return mines_around;
 }
 void Board::toggleFlag(int x,int y){
@@ -216,6 +204,9 @@ void Board::revealAll()
             }
         }
     }
+    system("cls");
+    int i=10, j=10;
+    printBoard(i,j);
 }
 
 void Board::printBoard(int x, int y) const {
@@ -233,7 +224,7 @@ void Board::printBoard(int x, int y) const {
     }
 
     std::cout<<"To move around the board, use arrow keys.\nTo reveal a cell, press ENTER.\nTo place a flag, press F.";
-    std::cout<<revealed_cells<<std::endl;
+    std::cout<<std::endl<<revealed_cells<<std::endl;
     std::cout<< getMinesOnField()<<std::endl;
 }
 

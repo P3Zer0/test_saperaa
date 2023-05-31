@@ -1,11 +1,15 @@
-//
-// Created by tomex on 17.05.2023.
-//
+/**
+ *  Created by Tomasz Jarząbek on 17.05.2023.
+ *
+ * @file NumberCell.cpp
+ *
+ * Implementations of methods declared in "NumberCell.h".
+ *
+ */
 
 #include "NumberCell.h"
 
 void NumberCell::setAdjacentMines(int mines) { number = mines; }
-bool NumberCell::isCellNumber() {return true;}
 char NumberCell::getSymbol() const {
     if (isCellFlagged())
         return 'F';

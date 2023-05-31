@@ -1,6 +1,11 @@
-//
-// Created by tomex on 17.05.2023.
-//
+/**
+ *  Created by Tomasz Jarząbek on 17.05.2023.
+ *
+ * @file MineCell.cpp
+ *
+ * Implementations of methods declared in "MineCell.h".
+ *
+ */
 
 #include "MineCell.h"
 
@@ -15,5 +20,5 @@ char MineCell::getSymbol() const {
     if (isCellRevealed())
         return '#';
     else
-        return 'W';
+        return '-';
 }
