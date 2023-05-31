@@ -216,7 +216,7 @@ void Board::printBoard(int x, int y) const {
         std::cout << std::endl;
     }
 
-    std::cout<<"To move around the board, use arrow keys.\nTo reveal a cell, press ENTER.\nTo place a flag, press F.";
+    std::cout<<"To move around the board, use arrow keys.\nTo reveal a cell, press ENTER.\nTo place a flag, press F.\n(If a move doesn't register, please press the key again a bit longer)";
     std::cout<<std::endl<<revealed_cells<<std::endl;
     std::cout<< getMinesOnField()<<std::endl;
 }
