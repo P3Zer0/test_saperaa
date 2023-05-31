@@ -25,7 +25,6 @@ void Game::checkGameState()
     {
         board.revealAll();
         std::cout<<"You hit a mine! Too bad, you lost!"<<std::endl<<"Press any key to exit";
-        getch();
         return;
     }
     else if(board.getGameState() == 2)
@@ -43,8 +42,8 @@ void Game::play()
     while (board.getGameState() == 0) {
         board.printBoard(x,y);
         std::cout << "\nCurrent coordinates:\n";  //aktualkna pozycja kursora
-        std::cout << "X: " << x << std::endl;  //aktualkna pozycja kursora
-        std::cout << "Y: " << y << std::endl;  //aktualkna pozycja kursora
+        std::cout << "X: " << y << std::endl;  //aktualkna pozycja kursora
+        std::cout << "Y: " << x << std::endl;  //aktualkna pozycja kursora
         if ((GetKeyState(enter) & 0x8000))
         {
             board.revealCell(x, y);

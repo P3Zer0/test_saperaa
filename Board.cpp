@@ -6,13 +6,6 @@
 #include <cstdlib>
 
 
-//std::vector<std::vector<Cell *>> cells;
-
-/*
-    Cell Board::*getCell(int x, int y) {
-        return cells[x][y];
-    }
-    */
 int Board::getGameState() const
 {
     return GameState;
