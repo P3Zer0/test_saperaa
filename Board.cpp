@@ -1,7 +1,10 @@
-//
-// Created by tomex on 17.05.2023.
-//
-
+/**
+ *  Created by Tomasz Jarząbek on 17.05.2023.
+ *
+ * @file Board.cpp
+ *
+ * Implementations of methods declared in "Board.h".
+ */
 #include "Board.h"
 #include <cstdlib>
 
@@ -16,36 +19,22 @@ int Board::loseGameState()
 }
 
 bool Board::inBoard(int x, int y) const {
-    if (x < 0) {
-        return false;
-    }
-    if (x >= height) {
-        return false;
-    }
-    if (y < 0) {
-        return false;
-    }
-    if (y >= width) {
-        return false;
-    }
-    return true;
+    return !(x < 0 || x >= height || y < 0 || y >= width);
 }
 
 
 void Board::initializeBoard() {
-    for (int i = 0; i < 10; i++) {
-        for (int j = 0; j < 10; j++) {
-            cells[i][j] = new NumberCell();
-        }
-    }
-    int minesToPlace = 10;
-    while (minesToPlace > 0) {
+    while (minesToPlace > 10) {
         int row = rand() % 10;
         int col = rand() % 10;
-        if (!cells[row][col]->isCellMine()) {
-            delete cells[row][col];
             cells[row][col] = new MineCell();
             minesToPlace--;
+    }
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            if(cells[i][j]==nullptr){
+                cells[i][j] = new NumberCell();
+            }
         }
     }
     updateAdjacentMines();
@@ -70,7 +59,7 @@ void Board::updateAdjacentMines() {
     }
 }
 
-void Board::reveal_empty_fields_around(int row, int col) {
+void Board::revealEmptyFieldsAround(int row, int col) {
     for (int help_row = (row - 1); help_row <= (row + 1); help_row++) {
         for (int help_col = (col - 1); help_col <= (col + 1); help_col++) {
             if (inBoard(help_row, help_col)) {
@@ -85,7 +74,7 @@ void Board::reveal_empty_fields_around(int row, int col) {
                         revealed_cells += 1;
                     }
                     if (countMines(help_row, help_col) == 0) {
-                        reveal_empty_fields_around(help_row, help_col);
+                        revealEmptyFieldsAround(help_row, help_col);
 
                     }
                 }
@@ -96,16 +85,7 @@ void Board::reveal_empty_fields_around(int row, int col) {
     }
 
 }
-int Board::getMinesOnField() const {
-    int allMines = 0;
-    for (int i = 0; i < 10; ++i) {
-        for (int j = 0; j < 10; ++j) {
-            if (cells[i][j]->isCellMine())
-                allMines += 1;
-        }
-    }
-    return allMines;
-}
+
 int Board::countMines(int row, int col) const {
     if (!inBoard(row, col)) {
         return -1;
@@ -124,7 +104,7 @@ int Board::countMines(int row, int col) const {
             }
         }
     }
-    //odejmujemy jesli zadane pole ma bombe
+    //we subtract if a field has a mine
     if (cells[row][col]->isCellMine()) {
         mines_around -= 1;
     }
@@ -161,7 +141,7 @@ void Board::revealCell(int row, int col) {
         revealed_cells += 1;
         number_of_moves += 1;
         if (countMines(row, col) == 0) {
-            reveal_empty_fields_around(row, col);
+            revealEmptyFieldsAround(row, col);
         }
     } else {
         if (number_of_moves == 0) {
@@ -172,7 +152,7 @@ void Board::revealCell(int row, int col) {
             revealed_cells += 1;
             number_of_moves += 1;
             if (countMines(row, col) == 0) {
-                reveal_empty_fields_around(row, col);
+                revealEmptyFieldsAround(row, col);
             }
             return;
         }
@@ -215,13 +195,13 @@ void Board::printBoard(int x, int y) const {
         }
         std::cout << std::endl;
     }
-
+    std::cout<<minesToPlace;
     std::cout<<"To move around the board, use arrow keys.\nTo reveal a cell, press ENTER.\nTo place a flag, press F.\n(If a move doesn't register, please press the key again a bit longer)";
 }
 
 void Board::CheckWin()
 {
-    if(revealed_cells == (height*width)-getMinesOnField()){
+    if(revealed_cells == (height*width)-minesToPlace){
         GameState = 2;
     }
 }

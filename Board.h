@@ -64,32 +64,14 @@ private:
      * it is set to 0 by default
      */
     int flags = 0;
-
-public:
     /**
-     * Method for checking whether the coordinates the player
-     * has inserted are within the boarders of the board.
-     * @param x the abscissa axis position of the cursor
-     * @param y the ordinate axis position of the cursor
-     * @return false if is outside the board, else true
-     */
+    * Method for checking whether the coordinates the player
+    * has inserted are within the boarders of the board.
+    * @param x the abscissa axis position of the cursor
+    * @param y the ordinate axis position of the cursor
+    * @return false if is outside the board, else true
+    */
     bool inBoard(int x, int y) const;
-    /**
-     * Constructor for the Board, initializing the object to
-     * be resized to 10x10 in width and height. Then, initializes
-     * the board using the initializeBoard method.
-     */
-    Board() {
-        cells.resize(10, std::vector<Cell *>(10));
-        initializeBoard();
-    }
-
-    /**
-     * Method for checking the current state of the game
-     * @return GameState
-     */
-    int getGameState() const;
-
     /**
      * Method for making the current state of the game a loss
      * @return GameState = 1
@@ -115,22 +97,46 @@ public:
      * @param row the current row that is being revealed
      * @param col the current column that is being revealed
      */
-    void reveal_empty_fields_around(int row, int col);
+    void revealEmptyFieldsAround(int row, int col);
 
     /**
-     * Method for returning the current number of mines on the
-     * board.
-     * @return allMines , the number of mines the method has counted
-     */
-    int getMinesOnField() const;
-
-    /**
-     * Method for counting up the mines around a field
-     * @param row the row coordinates of the cell
-     * @param col the column coordinates of the cell
-     * @return mines_around the number of mines around the cell
-     */
+ * Method for counting up the mines around a field
+ * @param row the row coordinates of the cell
+ * @param col the column coordinates of the cell
+ * @return mines_around the number of mines around the cell
+ */
     int countMines(int row, int col) const;
+
+    int minesToPlace;
+
+    //I tried using the enum function, but it failed due to something I explain in Game.cpp
+    /*
+    enum GameStates
+    {
+        LOSS,
+        WIN
+    };
+
+    GameStates GameState;
+     */
+
+public:
+
+    /**
+     * Constructor for the Board, initializing the object to
+     * be resized to 10x10 in width and height. Then, initializes
+     * the board using the initializeBoard method.
+     */
+    Board() : minesToPlace(20), height(10), width(10) {
+        cells.resize(height, std::vector<Cell *>(width));
+        initializeBoard();
+    }
+
+    /**
+     * Method for checking the current state of the game
+     * @return GameState
+     */
+    int getGameState() const;
 
     /**
      * Method for toggling a flag on the cell. If it doesn't have one,

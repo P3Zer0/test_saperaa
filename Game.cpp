@@ -12,19 +12,19 @@
 
 #include "Game.h"
 #include <conio.h>
-#define strzalka_lewo 0x26
-#define strzalka_prawo 0x28
-#define strzalka_dol 0x27
-#define strzalka_gora 0x25
+#define left_key 0x26
+#define right_key 0x28
+#define down_key 0x27
+#define up_key 0x25
 #define enter 0x0D
-#define flaga 0x46
+#define flag_key 0x46
 #include <windows.h>
 
 
 void Game::checkGameState()
 {
     board.CheckWin();
-    if(board.getGameState() == 1)
+    if(board.getGameState() == 1) //I tried using 'LOSS' here, after declaring an enum function GameState in board.h, but it kept saying I'm using an undeclared identifier. same for 'WIN'
     {
         board.revealAll();
         std::cout<<"You hit a mine! Too bad, you lost!"<<std::endl<<"Press any key to exit";
@@ -44,22 +44,22 @@ void Game::play()
 
     while (board.getGameState() == 0) {
         board.printBoard(x,y);
-        std::cout << "\nCurrent coordinates:\n";  //aktualkna pozycja kursora
-        std::cout << "X: " << y << std::endl;  //aktualkna pozycja kursora
-        std::cout << "Y: " << x << std::endl;  //aktualkna pozycja kursora
+        std::cout << "\nCurrent coordinates:\n";
+        std::cout << "X: " << y << std::endl;
+        std::cout << "Y: " << x << std::endl;
         if ((GetKeyState(enter) & 0x8000))
         {
             board.revealCell(x, y);
         }
-        else if ((GetKeyState(flaga) & 0x8000))
+        else if ((GetKeyState(flag_key) & 0x8000))
         {
             board.toggleFlag(x,y);
         }
 
-        else if ((GetKeyState(strzalka_prawo) & 0x8000) && x<9) x++;
-        else if ((GetKeyState(strzalka_lewo) & 0x8000) && x>0) x--;
-        else if ((GetKeyState(strzalka_dol) & 0x8000) && y<9) y++;
-        else if ((GetKeyState(strzalka_gora) & 0x8000) && y>0) y--;
+        else if ((GetKeyState(right_key) & 0x8000) && x<9) x++;
+        else if ((GetKeyState(left_key) & 0x8000) && x>0) x--;
+        else if ((GetKeyState(down_key) & 0x8000) && y<9) y++;
+        else if ((GetKeyState(up_key) & 0x8000) && y>0) y--;
 
         checkGameState();
         Sleep(60);
