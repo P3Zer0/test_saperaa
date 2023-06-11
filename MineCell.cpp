@@ -12,6 +12,7 @@
 bool MineCell::isCellMine() {
     return true;
 }
+
 char MineCell::getSymbol() const {
     if (isCellFlagged())
         return 'F';

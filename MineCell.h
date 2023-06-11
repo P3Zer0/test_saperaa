@@ -10,6 +10,7 @@
  */
 #ifndef TESTSAPERAAAA_MINECELL_H
 #define TESTSAPERAAAA_MINECELL_H
+
 #include "Cell.h"
 
 class MineCell : public Cell {
@@ -19,6 +20,7 @@ public:
      * @return true
      */
     bool isCellMine() override;
+
     /**
      * Method for returning the symbol of the cell, depending on whether it's
      * revealed or flagged or not, it will show different symbols
@@ -26,7 +28,6 @@ public:
      */
     char getSymbol() const override;
 };
-
 
 
 #endif //TESTSAPERAAAA_MINECELL_H

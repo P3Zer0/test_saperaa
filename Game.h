@@ -11,6 +11,7 @@
  */
 #ifndef TESTSAPERAAAA_GAME_H
 #define TESTSAPERAAAA_GAME_H
+
 #include "Board.h"
 
 
@@ -26,6 +27,7 @@ public:
  * If not, continues the game.
  */
     void checkGameState();
+
     /**
 * Allows the player to communicate with the game by using the arrow keys.
 * To reveal a field, press ENTER.
@@ -34,7 +36,6 @@ public:
 */
     void play();
 };
-
 
 
 #endif //TESTSAPERAAAA_GAME_H

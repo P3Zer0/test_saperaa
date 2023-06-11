@@ -31,6 +31,7 @@ public:
     * @param mines
     */
     void setAdjacentMines(int mines);
+
     /**
      * Method for returning the number of mines around a cell on the board
      * @return a set char value (dependent on number)

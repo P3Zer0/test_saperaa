@@ -10,11 +10,12 @@
 #include "NumberCell.h"
 
 void NumberCell::setAdjacentMines(int mines) { number = mines; }
+
 char NumberCell::getSymbol() const {
     if (isCellFlagged())
         return 'F';
     if (isCellRevealed())
-        if(number == 0)
+        if (number == 0)
             return ' ';
         else
             return '0' + number;
