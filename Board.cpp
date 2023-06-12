@@ -153,7 +153,7 @@ void Board::revealCell(int row, int col) {
             if (countMines(row, col) == 0) {
                 revealEmptyFieldsAround(row, col);
             }
-            minesToPlace--;
+            minesToPlace = minesToPlace-1;
             return;
         }
         if (number_of_moves != 0) {
@@ -195,7 +195,7 @@ void Board::printBoard(int x, int y) const {
 }
 
 void Board::CheckWin() {
-    if (revealed_cells == (height * width) - minesToPlace) {
+    if (revealed_cells == ((height * width) - minesToPlace)) {
         GameState = 2;
     }
 }

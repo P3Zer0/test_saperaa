@@ -107,7 +107,7 @@ private:
  */
     int countMines(int row, int col) const;
 
-    int minesToPlace;
+    int minesToPlace = 0;
 
     //I tried using the enum function, but it failed due to something I explain in Game.cpp
     /*
