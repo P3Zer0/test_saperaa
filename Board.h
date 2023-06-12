@@ -13,6 +13,7 @@
 
 #ifndef TESTSAPERAAAA_BOARD_H
 #define TESTSAPERAAAA_BOARD_H
+
 #include "Cell.h"
 #include "MineCell.h"
 #include "NumberCell.h"
@@ -59,6 +60,7 @@ private:
      * it is set to 0 by default
      */
     int flags = 0;
+
     /**
     * Method for checking whether the coordinates the player
     * has inserted are within the boarders of the board.
@@ -67,6 +69,7 @@ private:
     * @return false if is outside the board, else true
     */
     bool inBoard(int x, int y) const;
+
     /**
      * Method for making the current state of the game a loss
      * @return GameState = 1
@@ -111,8 +114,7 @@ private:
     /**
  * the variable used to determine the state of the game.
  */
-    enum GameStates
-    {
+    enum GameStates {
         RUNNING,
         LOSS,
         WIN
@@ -145,7 +147,7 @@ public:
      * @param x the abscissa axis position of the cell
      * @param y the ordinate axis position of the cell
      */
-    void toggleFlag(int x,int y);
+    void toggleFlag(int x, int y);
 
     /**
      * Method for revealing a cell. it disallows to reveal an already

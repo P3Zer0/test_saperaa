@@ -25,8 +25,7 @@
 
 void Game::checkGameState() {
     board.CheckWin();
-    if (board.getGameState() == 1)
-    {
+    if (board.getGameState() == 1) {
         board.revealAll();
         std::cout << std::endl << "You hit a mine! Too bad, you lost!" << std::endl << "Press any key to exit";
         return;

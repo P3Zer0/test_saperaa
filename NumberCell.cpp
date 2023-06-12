@@ -35,7 +35,6 @@ char NumberCell::getSymbol() const {
             return '8';
         else if (number == 9)
             return '9';
-    }
-    else
+    } else
         return '-';
 }

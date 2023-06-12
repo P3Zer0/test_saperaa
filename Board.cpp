@@ -153,7 +153,7 @@ void Board::revealCell(int row, int col) {
             if (countMines(row, col) == 0) {
                 revealEmptyFieldsAround(row, col);
             }
-            minesToPlace = minesToPlace-1;
+            minesToPlace = minesToPlace - 1;
             return;
         }
         if (number_of_moves != 0) {
@@ -189,7 +189,6 @@ void Board::printBoard(int x, int y) const {
         }
         std::cout << std::endl;
     }
-    std::cout << minesToPlace;
     std::cout
             << "To move around the board, use arrow keys.\nTo reveal a cell, press ENTER.\nTo place a flag, press F.\n(If a move doesn't register, please press the key again a bit longer)";
 }
