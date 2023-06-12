@@ -25,14 +25,13 @@
 
 void Game::checkGameState() {
     board.CheckWin();
-    if (board.getGameState() ==
-        1) //I tried using 'LOSS' here, after declaring an enum function GameState in board.h, but it kept saying I'm using an undeclared identifier. same for 'WIN'
+    if (board.getGameState() == 1)
     {
         board.revealAll();
-        std::cout << "You hit a mine! Too bad, you lost!" << std::endl << "Press any key to exit";
+        std::cout << std::endl << "You hit a mine! Too bad, you lost!" << std::endl << "Press any key to exit";
         return;
     } else if (board.getGameState() == 2) {
-        std::cout << "Wahoo! You won! CONGRATZ!" << std::endl << "Press any key to exit";
+        std::cout << std::endl << "Wahoo! You won! CONGRATZ!" << std::endl << "Press any key to exit";
         getch();
         return;
     }

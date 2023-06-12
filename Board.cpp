@@ -14,7 +14,7 @@ int Board::getGameState() const {
 }
 
 int Board::loseGameState() {
-    return GameState = 1;
+    return GameState = LOSS;
 }
 
 bool Board::inBoard(int x, int y) const {
@@ -196,6 +196,6 @@ void Board::printBoard(int x, int y) const {
 
 void Board::CheckWin() {
     if (revealed_cells == ((height * width) - minesToPlace)) {
-        GameState = 2;
+        GameState = WIN;
     }
 }

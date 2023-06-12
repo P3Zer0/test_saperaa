@@ -51,12 +51,7 @@ private:
      * is set to 0 by default
      */
     int number_of_moves = 0;
-    /**
-     * the variable used to determine the state of the game.
-     * 1 means a loss and 2 means a win
-     * is set to 0 by default
-     */
-    int GameState=0;
+
     /**
      * the number of flags that the player has placed on
      * the board. it is used in determining the current
@@ -107,18 +102,24 @@ private:
  */
     int countMines(int row, int col) const;
 
+    /**
+     * The number of mines that is set to be placed on the board.
+     * Set to zero by default.
+     */
     int minesToPlace = 0;
 
-    //I tried using the enum function, but it failed due to something I explain in Game.cpp
-    /*
+    /**
+ * the variable used to determine the state of the game.
+ */
     enum GameStates
     {
+        RUNNING,
         LOSS,
         WIN
     };
 
     GameStates GameState;
-     */
+
 
 public:
 
@@ -127,7 +128,7 @@ public:
      * be resized to 10x10 in width and height. Then, initializes
      * the board using the initializeBoard method.
      */
-    Board() : minesToPlace(20), height(10), width(10) {
+    Board() : minesToPlace(20), height(10), width(10), GameState(RUNNING) {
         cells.resize(height, std::vector<Cell *>(width));
         initializeBoard();
     }
