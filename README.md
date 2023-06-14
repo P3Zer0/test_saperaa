@@ -25,6 +25,7 @@ For the sake of convenience, the game contains an option to place a flag on a ce
 The game ends either when you reveal all of the empty cells (win) or when you try to reveal any of the mines (loss).
 
 ![App Screenshot](https://i.imgur.com/7WoEbzE.png)
+
 A screenshot of the game being played.
 
 ## Credits
