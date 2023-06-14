@@ -23,11 +23,12 @@ bool Board::inBoard(int x, int y) const {
 
 
 void Board::initializeBoard() {
-    while (minesToPlace > 10) {
+    int x = minesToPlace;
+    while (x > 0) {
         int row = rand() % 10;
         int col = rand() % 10;
         cells[row][col] = new MineCell();
-        minesToPlace--;
+        x--;
     }
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {

@@ -130,7 +130,7 @@ public:
      * be resized to 10x10 in width and height. Then, initializes
      * the board using the initializeBoard method.
      */
-    Board() : minesToPlace(20), height(10), width(10), GameState(RUNNING) {
+    Board() : minesToPlace(10), height(10), width(10), GameState(RUNNING) {
         cells.resize(height, std::vector<Cell *>(width));
         initializeBoard();
     }
