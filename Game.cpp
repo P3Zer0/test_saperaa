@@ -59,6 +59,3 @@ void Game::play() {
         system("cls");
     }
 }
-
-
-
